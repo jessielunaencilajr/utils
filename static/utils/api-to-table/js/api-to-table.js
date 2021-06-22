@@ -281,7 +281,7 @@ class ApiToTable {
                     toastCreating.remove()
     
                     if (response.status == 201) {
-                        that.dataTable.ajax.reload()
+                        that.dataTable.ajax.reload(null, false)
                         modal.modal("hide")
                         toastr.success(`${that.prefix.title()} has been created!`)
                     }
@@ -306,7 +306,7 @@ class ApiToTable {
                     body: that._createFormData(`${modalId}-fields`)
                 }).then(function(response) {
                     if (response.status == 200) {
-                        that.dataTable.ajax.reload()
+                        that.dataTable.ajax.reload(null, false)
                         modal.modal("hide")
                         toastr.success(`${that.prefix.title()} ${modalTitleIndex}`, `Changes have been saved`)
                     }
@@ -337,7 +337,7 @@ class ApiToTable {
                         body: formData
                     }).then(function(response) {
                         if (response.status == 200) {
-                            that.dataTable.ajax.reload()
+                            that.dataTable.ajax.reload(null, false)
                             modal.modal("hide")
                             let toastrDelete = toastr
 
@@ -370,7 +370,7 @@ class ApiToTable {
                         body: formData
                     }).then(function(response) {
                         if (response.status == 200) {
-                            that.dataTable.ajax.reload()
+                            that.dataTable.ajax.reload(null, false)
                             modal.modal("hide")
                             let toastrDelete = toastr
 
@@ -497,7 +497,7 @@ class ApiToTable {
                     title: 'Refresh',
                 },
                 action: function( e, dt, node, config) {
-                    dt.ajax.reload()
+                    dt.ajax.reload(null, false)
                 },
             }
             buttons.push(btn)
@@ -568,7 +568,7 @@ class ApiToTable {
     subscribe(eventDetails) {
         let that = this
         that.table.addClass(eventDetails['subscriberClass'])
-        that.table.on(eventDetails['eventName'], () => that.dataTable.ajax.reload())
+        that.table.on(eventDetails['eventName'], () => that.dataTable.ajax.reload(null, false))
     }
 
 }
