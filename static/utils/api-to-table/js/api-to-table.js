@@ -559,7 +559,7 @@ class ApiToTable {
                 },
                 buttons: that._getDataTableButtons()
             },
-            select: true,
+            select: 'single',
             responsive: true,
         })
         that._preventRowUnselect()
