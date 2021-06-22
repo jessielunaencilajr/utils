@@ -1,0 +1,118 @@
+.btn.edit {
+	width: 40px !important;
+	background-color: #051038;
+	opacity: 0.8;
+}
+
+.btn.edit:hover {opacity: 1}
+
+.btn.edit:after {
+	content: '\f044';
+	font-family: FontAwesome;
+}
+
+
+.btn.add {
+	width: 40px !important;
+	background-color: #188018;
+	opacity: 0.9;
+}
+
+.btn.add:hover {opacity: 1}
+
+.btn.add:after {
+	content: '\f067';
+	font-family: FontAwesome;
+}
+
+
+.btn.save {
+	width: 40px !important;
+	background-color: #002846;
+	opacity: 0.8;
+}
+
+.btn.save:hover {opacity: 1}
+
+.btn.save:after {
+	content: '\f0c7';
+	font-family: FontAwesome;
+}
+
+
+.btn.delete {
+	width: 40px !important;
+}
+
+.btn.delete:after {
+	content: '\f2ed';
+	font-family: FontAwesome;
+}
+
+
+.btn.download {
+	width: 40px !important;
+	background-color: #002846;
+	opacity: 0.8;
+}
+
+.btn.download:hover {opacity: 1}
+
+.btn.download:after {
+	content: '\f56d';
+	font-family: FontAwesome;
+}
+
+
+.btn.export {
+	width: 40px !important;
+	background-color: #1d4189;
+	opacity: 0.8;
+}
+
+.btn.export:hover {opacity: 1}
+
+.btn.export:after {
+	content: '\f56e';
+	font-family: FontAwesome;
+}
+
+.btn.excel {
+	width: 40px !important;
+	background-color: #002846;
+	opacity: 0.8;
+}
+
+.btn.excel:hover {opacity: 1}
+
+.btn.excel:after {
+	content: '\f1c3';
+	font-family: FontAwesome;
+}
+
+.btn.csv {
+	width: 40px !important;
+	background-color: #002846;
+	opacity: 0.8;
+}
+
+.btn.csv:hover {opacity: 1}
+
+.btn.csv:after {
+	content: '\f6dd';
+	font-family: FontAwesome;
+}
+
+
+.btn.refresh {
+	width: 40px !important;
+	background-color: #1d4189;
+	opacity: 0.8;
+}
+
+.btn.refresh:hover {opacity: 1}
+
+.btn.refresh:after {
+	content: '\f2f9';
+	font-family: FontAwesome;
+}

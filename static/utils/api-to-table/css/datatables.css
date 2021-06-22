@@ -1,0 +1,68 @@
+table.dataTable tbody tr.selected {
+    color: white !important;
+    background-color: #435C75 !important;
+}
+
+
+.page-item.active .page-link {
+    background-color: #435C75 !important;
+    border: none !important;
+	color: white !important;
+}
+.page-link {
+    color: #002846 !important;
+}
+
+
+/* 
+.btn.dt-export {
+	width: 40px !important;
+	background-color: #000044b0;
+	opacity: 0.8;
+}
+
+.btn.dt-export:hover {opacity: 1}
+
+.btn.dt-export:after {
+	content: '\f56e';
+	font-family: FontAwesome;
+}
+
+.btn.dt-excel {
+	width: 40px !important;
+	background-color: #505050;
+	opacity: 0.8;
+}
+
+.btn.dt-excel:hover {opacity: 1}
+
+.btn.dt-excel:after {
+	content: '\f1c3';
+	font-family: FontAwesome;
+}
+
+.btn.dt-csv {
+	width: 40px !important;
+	background-color: #505050;
+	opacity: 0.8;
+}
+
+.btn.dt-csv:hover {opacity: 1}
+
+.btn.dt-csv:after {
+	content: '\f6dd';
+	font-family: FontAwesome;
+} */
+
+
+
+/*
+NOT WORKING (FOR REFERENCE ONLY)
+div.dataTables_paginate ul.pagination li.paginate_button.previous a {
+    display: none;
+    background-color: #435C75 !important;
+}
+
+div.dataTables_paginate ul.pagination li.paginate_button.previous:after {
+    content: '<';
+  } */
