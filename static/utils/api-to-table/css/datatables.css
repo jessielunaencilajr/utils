@@ -3,6 +3,11 @@ table.dataTable tbody tr.selected {
     background-color: #435C75 !important;
 }
 
+table.dataTable tbody tr:hover {
+	background-color: #c2cde2;
+	cursor: pointer;
+}
+
 
 .page-item.active .page-link {
     background-color: #435C75 !important;

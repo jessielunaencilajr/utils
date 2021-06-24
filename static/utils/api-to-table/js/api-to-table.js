@@ -494,7 +494,7 @@ class ApiToTable {
         let colBtnWidth = 0
 
         if (that.buttons.includes('edit')) {
-            colBtn += "<button class='btn btn-secondary edit' title='Edit'></button>\n"
+            colBtn += "<button class='btn btn-secondary edit' title='Edit' style='opacity:0'></button>\n"
             colBtnWidth += 45
 
             $(`#${that.tableBodyId}`).on('click', 'button.edit', function () {
@@ -504,9 +504,10 @@ class ApiToTable {
                     modal.modal('show')
                 }, 50)
             } )
+
         }
         if (that.buttons.includes('delete')) {
-            colBtn += "<button class='btn btn-danger delete' title='Delete'></button>\n"
+            colBtn += "<button class='btn btn-danger delete' title='Delete' style='opacity:0'></button>\n"
             colBtnWidth += 45
 
             $(`#${that.tableBodyId}`).on('click', 'button.delete', function () {
@@ -524,6 +525,13 @@ class ApiToTable {
                 defaultContent: `<td style="white-space:nowrap;">${colBtn}</td>`,
                 width: colBtnWidth,
                 orderable: false,
+            })
+
+            $(`#${that.tableBodyId}`).on('mouseenter', 'tr:not(".selected")', function () {
+                $(this).find('button').css("opacity", "0.1" )
+            })
+            $(`#${that.tableBodyId}`).on('mouseleave', 'tr:not(".selected")', function () {
+                $(this).find('button').css("opacity", "0")
             })
         }
         
@@ -588,16 +596,6 @@ class ApiToTable {
         return buttons
     }
 
-    _preventRowUnselect() {
-        let that = this
-        that.dataTable.on('user-select', function ( e, dt, type, cell, originalEvent ) {
-            let row = dt.row( cell.index().row ).node()
-            if ( $(row).hasClass('selected') ) {
-                dt.row( cell.index().row ).deselect()
-            }
-        })
-    }
-
     load() {
         let that = this
         that.dataTable = that.table.DataTable({
@@ -621,7 +619,21 @@ class ApiToTable {
             responsive: true,
             initComplete: (settings, json) => that._updateSummaryCounters(json),
         })
-        that._preventRowUnselect()
+
+        that.dataTable.on('user-select', function ( e, dt, type, cell, originalEvent ) {
+            // prevent row deselect when same row clicked again
+            let row = dt.row( cell.index().row ).node()
+            if ( $(row).hasClass('selected') ) {
+                dt.row( cell.index().row ).deselect()
+            }
+            
+            // should come after the prevent row deselect
+            $(`#${that.tableBodyId} tr`).eq(cell.index().row).find('button').css("opacity", "0.8")
+        })
+
+        that.dataTable.on('deselect', function ( e, dt, type, indexes ) {
+            $(`#${that.tableBodyId} tr`).eq(indexes).find('button').css("opacity", "0")
+        })
     }
 
     reload() {
