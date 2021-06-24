@@ -15,10 +15,12 @@ class ApiToTable {
         buttons=[],
         softDelete=null,
         params='',
+        summary={},
     }) {
         this.url = url
         this.prefix = prefix
         this.card = $(`#${prefix}-card`)
+        this.summarycard = $(`#${prefix}-summary-card`)
         this.cardButtonGroupId = `${prefix}-button-group`
         this.tableId = `${prefix}-table`
         this.tableHeaderId = `${prefix}-table-header`
@@ -26,6 +28,7 @@ class ApiToTable {
         this.buttons = buttons
         this.softDelete = softDelete
         this.params = params
+        this.summary = summary
 
         this.fields = fields
         this.indexCol = indexCol
@@ -36,8 +39,61 @@ class ApiToTable {
         this.table = $(`#${this.tableId}`)
 
         this._addCardButtons()
+        this._addSummaryCard()
 
         this.load()
+    }
+
+    _addSummaryCounters(summaryCardBody) {
+        let that = this
+        for (const [field, details] of Object.entries(that.summary)) {
+
+            let fieldId = `${that.prefix}-summary-card-${field.toLowerCase().replace(/\s+/g, '-')}`
+            let counter = $(
+                `<div class="row">
+                    <div class="col-md-8">
+                        <p class="lead">${field}</p>
+                    </div>
+                    <div class="lead col-md-4">
+                        <p id="${fieldId}" class="lead">0</p>
+                    </div>
+                    
+                </div>`
+            )
+            summaryCardBody.append(counter)
+        }
+    }
+
+    _updateSummaryCounters(json) {
+        let that = this
+        for (const [field, details] of Object.entries(that.summary)) {
+            let fieldId = `${that.prefix}-summary-card-${field.toLowerCase().replace(/\s+/g, '-')}`
+            let fieldCount = json.filter(obj => obj[details.field] == details.value).length
+            
+            $(`#${fieldId}`).text(fieldCount)
+        }
+    }
+
+    _addSummaryCard() {
+        let that = this
+        let cardHeader = $(
+            `<div class="card-header">
+                <div class="row">
+                    <div class="d-flex col-md-12 justify-content-between">
+                        <h4 class="text">Summary</h4>
+                    </div>
+                </div>
+            </div>`
+        )
+        $(that.summarycard).append(cardHeader)
+
+        let cardBody = $(`
+            <div class="card-body" id="${that.prefix}-summary-card-body">
+            </div>
+        `)
+        $(that.summarycard).append(cardBody)
+
+        that._addSummaryCounters($(`#${that.prefix}-summary-card-body`))
     }
 
     _addCardHeader() {
@@ -98,7 +154,7 @@ class ApiToTable {
             if (details.type == 'dropdown') {
                 modalFields.append(`
                 <div class="col-md-6">
-                    <div class="form-group input-group-sm has-error">
+                    <div class="form-group input-group-sm">
                         <label for="${fieldId}">${label}</label>
                         <select ${disabled} class="form-control" id="${fieldId}"></select>
                         <span class="text-danger" id="${fieldId}-error"></span>
@@ -281,7 +337,7 @@ class ApiToTable {
                     toastCreating.remove()
     
                     if (response.status == 201) {
-                        that.dataTable.ajax.reload(null, false)
+                        that.reload()
                         modal.modal("hide")
                         toastr.success(`${that.prefix.title()} has been created!`)
                     }
@@ -306,7 +362,7 @@ class ApiToTable {
                     body: that._createFormData(`${modalId}-fields`)
                 }).then(function(response) {
                     if (response.status == 200) {
-                        that.dataTable.ajax.reload(null, false)
+                        that.reload()
                         modal.modal("hide")
                         toastr.success(`${that.prefix.title()} ${modalTitleIndex}`, `Changes have been saved`)
                     }
@@ -337,7 +393,7 @@ class ApiToTable {
                         body: formData
                     }).then(function(response) {
                         if (response.status == 200) {
-                            that.dataTable.ajax.reload(null, false)
+                            that.reload()
                             modal.modal("hide")
                             let toastrDelete = toastr
 
@@ -370,7 +426,7 @@ class ApiToTable {
                         body: formData
                     }).then(function(response) {
                         if (response.status == 200) {
-                            that.dataTable.ajax.reload(null, false)
+                            that.reload()
                             modal.modal("hide")
                             let toastrDelete = toastr
 
@@ -497,7 +553,7 @@ class ApiToTable {
                     title: 'Refresh',
                 },
                 action: function( e, dt, node, config) {
-                    dt.ajax.reload(null, false)
+                    that.reload()
                 },
             }
             buttons.push(btn)
@@ -561,14 +617,18 @@ class ApiToTable {
             },
             select: 'single',
             responsive: true,
+            initComplete: (settings, json) => that._updateSummaryCounters(json),
         })
         that._preventRowUnselect()
     }
 
+    reload() {
+        this.dataTable.ajax.reload((json) => this._updateSummaryCounters(json), false)
+    }
+
     subscribe(eventDetails) {
-        let that = this
-        that.table.addClass(eventDetails['subscriberClass'])
-        that.table.on(eventDetails['eventName'], () => that.dataTable.ajax.reload(null, false))
+        this.table.addClass(eventDetails['subscriberClass'])
+        this.table.on(eventDetails['eventName'], () => this.reload())
     }
 
 }
