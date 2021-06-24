@@ -51,11 +51,11 @@ class ApiToTable {
             let fieldId = `${that.prefix}-summary-card-${field.toLowerCase().replace(/\s+/g, '-')}`
             let counter = $(
                 `<div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-9">
                         <p class="lead">${field}</p>
                     </div>
-                    <div class="lead col-md-4">
-                        <p id="${fieldId}" class="lead">0</p>
+                    <div class="lead col-md-3">
+                        <p id="${fieldId}" class="lead"></p>
                     </div>
                     
                 </div>`
@@ -66,11 +66,13 @@ class ApiToTable {
 
     _updateSummaryCounters(json) {
         let that = this
-        for (const [field, details] of Object.entries(that.summary)) {
+        for (const [field, filters] of Object.entries(that.summary)) {
             let fieldId = `${that.prefix}-summary-card-${field.toLowerCase().replace(/\s+/g, '-')}`
-            let fieldCount = json.filter(obj => obj[details.field] == details.value).length
-            
-            $(`#${fieldId}`).text(fieldCount)
+            let filteredData = json
+            for (const [field, value] of Object.entries(filters)) {
+                filteredData = filteredData.filter(obj => obj[field] == value)
+            }
+            $(`#${fieldId}`).text(filteredData.length)
         }
     }
 
@@ -79,8 +81,8 @@ class ApiToTable {
         let cardHeader = $(
             `<div class="card-header">
                 <div class="row">
-                    <div class="d-flex col-md-12 justify-content-between">
-                        <h4 class="text">Summary</h4>
+                    <div class="col-md-12">
+                        <h5 class="text-muted">Summary</h5>
                     </div>
                 </div>
             </div>`
