@@ -527,12 +527,6 @@ class ApiToTable {
                 orderable: false,
             })
 
-            $(`#${that.tableBodyId}`).on('mouseenter', 'tr:not(".selected")', function () {
-                $(this).find('button').css("opacity", "0.1" )
-            })
-            $(`#${that.tableBodyId}`).on('mouseleave', 'tr:not(".selected")', function () {
-                $(this).find('button').css("opacity", "0")
-            })
         }
         
         return cols
@@ -555,6 +549,12 @@ class ApiToTable {
         let that = this
         let buttons = []
 
+        let exportOptions = {
+            modifier: {
+                selected: null, // null = export all regardless of selected rows
+            },
+        }
+    
         if (that.buttons.includes('refresh')) {
             let btn = {
                 text: '',
@@ -579,6 +579,7 @@ class ApiToTable {
                 attr:  {
                     title: 'Export to Excel',
                 },
+                exportOptions: exportOptions,
             }
             buttons.push(btn)
         }
@@ -590,6 +591,7 @@ class ApiToTable {
                 attr:  {
                     title: 'Export to CSV',
                 },
+                exportOptions: exportOptions,
             }
             buttons.push(btn)
         }
@@ -626,14 +628,8 @@ class ApiToTable {
             if ( $(row).hasClass('selected') ) {
                 dt.row( cell.index().row ).deselect()
             }
-            
-            // should come after the prevent row deselect
-            $(`#${that.tableBodyId} tr`).eq(cell.index().row).find('button').css("opacity", "0.8")
         })
 
-        that.dataTable.on('deselect', function ( e, dt, type, indexes ) {
-            $(`#${that.tableBodyId} tr`).eq(indexes).find('button').css("opacity", "0")
-        })
     }
 
     reload() {
