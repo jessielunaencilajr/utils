@@ -166,7 +166,7 @@ class ApiToTable {
                 $(`#${fieldId}`).empty()
                 for (const [optVal, optHtml] of Object.entries(details.options)) {
                     let opt = $('<option></option>').val(optVal).html(optHtml)
-                    if (optVal == 'null') { opt.prop("disabled", true) }
+                    if (optVal == 'null') { opt.prop('selected', true).prop("disabled", true) }
                     $(`#${fieldId}`).append(opt)
                     
                     if (rowData[field] == optHtml) {
