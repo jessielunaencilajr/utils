@@ -266,7 +266,7 @@ class ApiToTable {
             if (modalField.is(':checkbox')) {
                 modalFieldVal = (modalField.is(':checked')) ? true : false
             }
-            if (details.type == 'datetime_as_date') {
+            if (details.type == 'datetime_as_date' && modalField.val().trim() != '') {
                 modalFieldVal = `${modalField.val().trim()} 00:00:00`
             }
 
