@@ -357,12 +357,15 @@ class ApiToTable {
                     `${that.url}${rowData[that.indexCol]}/`,
                     {headers: {'X-CSRFToken': csrftoken}}
                 )
+
+                let toast = toastr.info(`Editing ${that.prefix.title()} ${modalTitleIndex}...`)
                 
                 fetch(request, {
                     method: 'PATCH',
                     mode: 'same-origin',
                     body: that._createFormData(`${modalId}-fields`)
                 }).then(function(response) {
+                    toast.remove()
                     if (response.status == 200) {
                         that.reload()
                         modal.modal("hide")
@@ -388,12 +391,15 @@ class ApiToTable {
                     formData.append(
                         Object.keys(that.softDelete)[0],
                         Object.values(that.softDelete)[0])
+
+                        let toast = toastr.info(`Deleting ${that.prefix.title()} ${modalTitleIndex}...`)
                     
                     fetch(request, {
                         method: 'PATCH',
                         mode: 'same-origin',
                         body: formData
                     }).then(function(response) {
+                        toast.remove()
                         if (response.status == 200) {
                             that.reload()
                             modal.modal("hide")
@@ -422,11 +428,14 @@ class ApiToTable {
                     })
                 }
                 else { //hard delete
+                    let toast = toastr.info(`Deleting ${that.prefix.title()} ${modalTitleIndex}...`)
+
                     fetch(request, {
                         method: 'DELETE',
                         mode: 'same-origin',
                         body: formData
                     }).then(function(response) {
+                        toast.remove()
                         if (response.status == 200) {
                             that.reload()
                             modal.modal("hide")
