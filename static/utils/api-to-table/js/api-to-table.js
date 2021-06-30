@@ -339,6 +339,7 @@ class ApiToTable {
                     body: that._createFormData(`${modalId}-fields`)
                 }).then(function(response) {
                     toastCreating.remove()
+                    $(`#${modalId}-btn`).prop('disabled', false)
     
                     if (response.status == 201) {
                         that.reload()
@@ -368,6 +369,8 @@ class ApiToTable {
                     body: that._createFormData(`${modalId}-fields`)
                 }).then(function(response) {
                     toast.remove()
+                    $(`#${modalId}-btn`).prop('disabled', false)
+
                     if (response.status == 200) {
                         that.reload()
                         modal.modal("hide")
@@ -402,6 +405,8 @@ class ApiToTable {
                         body: formData
                     }).then(function(response) {
                         toast.remove()
+                        $(`#${modalId}-btn`).prop('disabled', false)
+
                         if (response.status == 200) {
                             that.reload()
                             modal.modal("hide")
@@ -438,6 +443,8 @@ class ApiToTable {
                         body: formData
                     }).then(function(response) {
                         toast.remove()
+                        $(`#${modalId}-btn`).prop('disabled', false)
+
                         if (response.status == 200) {
                             that.reload()
                             modal.modal("hide")
@@ -465,7 +472,6 @@ class ApiToTable {
                 }
             }
 
-            $(`#${modalId}-btn`).prop('disabled', false)
         })
 
         return modal
