@@ -319,6 +319,8 @@ class ApiToTable {
         
         $(`#${modalId}-btn`).click(function() {
 
+            $(`#${modalId}-btn`).prop('disabled', true)
+
             that._clearError(`${modalId}-fields`)
 
             const csrftoken = Cookies.get('csrftoken')
@@ -462,6 +464,8 @@ class ApiToTable {
                     })
                 }
             }
+
+            $(`#${modalId}-btn`).prop('disabled', false)
         })
 
         return modal
