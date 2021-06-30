@@ -31,6 +31,24 @@ table.dataTable tbody tr.selected td button:hover {
 }
 
 
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.modal-footer button:disabled:before {
+	animation: spin 2s linear infinite;
+	display: inline-block; /* necessary to animate element */
+    content: '\f110';
+	font-family: FontAwesome;
+	margin-right: 10px;
+}
+
+
 /* 
 .btn.dt-export {
 	width: 40px !important;
