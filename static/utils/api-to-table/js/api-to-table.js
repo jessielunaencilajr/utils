@@ -407,8 +407,8 @@ class ApiToTable {
                 }
 
                 if (that.softDelete) {
-                    sd_key = Object.keys(that.softDelete)[0]
-                    sd_val = Object.values(that.softDelete)[0]
+                    let sd_key = Object.keys(that.softDelete)[0]
+                    let sd_val = Object.values(that.softDelete)[0]
                     if (sd_val == '__NOW__') {
                         sd_val = moment.format()
                     }
