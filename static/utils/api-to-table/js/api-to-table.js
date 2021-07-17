@@ -16,6 +16,7 @@ class ApiToTable {
         softDelete=null,
         params='',
         summary={},
+        addlFormData=null,
     }) {
         this.url = url
         this.prefix = prefix
@@ -29,6 +30,7 @@ class ApiToTable {
         this.softDelete = softDelete
         this.params = params
         this.summary = summary
+        this.addlFormData = addlFormData
 
         this.fields = fields
         this.indexCol = indexCol
@@ -257,6 +259,12 @@ class ApiToTable {
     _createFormData(modalFieldId) {
         let that = this
         let formData = new FormData()
+
+        if (that.addlFormData) {
+            for (const [field, value] of Object.entries(that.addlFormData)) {
+                formData.append(field, value)
+            }
+        }
         
         for (const [field, details] of Object.entries(that.fields)) {
             let modalField = $(`#${modalFieldId}-${field}`)
@@ -392,12 +400,21 @@ class ApiToTable {
 
                 let formData = new FormData()
 
-                if (that.softDelete) {
-                    formData.append(
-                        Object.keys(that.softDelete)[0],
-                        Object.values(that.softDelete)[0])
+                if (that.addlFormData) {
+                    for (const [field, value] of Object.entries(that.addlFormData)) {
+                        formData.append(field, value)
+                    }
+                }
 
-                        let toast = toastr.info(`Deleting ${that.prefix.title()} ${modalTitleIndex}...`)
+                if (that.softDelete) {
+                    sd_key = Object.keys(that.softDelete)[0]
+                    sd_val = Object.values(that.softDelete)[0]
+                    if (sd_val == '__NOW__') {
+                        sd_val = moment.format()
+                    }
+                    formData.append(sd_key, sd_val)
+
+                    let toast = toastr.info(`Deleting ${that.prefix.title()} ${modalTitleIndex}...`)
                     
                     fetch(request, {
                         method: 'PATCH',
