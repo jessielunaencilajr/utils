@@ -410,7 +410,7 @@ class ApiToTable {
                     let sd_key = Object.keys(that.softDelete)[0]
                     let sd_val = Object.values(that.softDelete)[0]
                     if (sd_val == '__NOW__') {
-                        sd_val = moment.format()
+                        sd_val = moment().format()
                     }
                     formData.append(sd_key, sd_val)
 
