@@ -152,7 +152,7 @@ class ApiToTable {
             let label = ('label' in details) ? details.label : field.title()
             let placeholder = ('placeholder' in details) ? details.placeholder : label
 
-            let disabled = (modalType == 'edit' && details['readyOnly']) ? 'disabled' : ''
+            let disabled = (modalType == 'edit' && details['readOnly']) ? 'disabled' : ''
             disabled = (modalType == 'delete') ? 'disabled' : disabled
 
             if (details.type == 'dropdown') {
