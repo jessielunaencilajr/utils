@@ -208,10 +208,11 @@ class ApiToTable {
                 )
             }
             else if (details.type == 'checkbox') {
+                let checked = (rowData[field] == 'true') ? 'checked' : ''
                 modalFields.append(`
                 <div class="col-md-6">
                     <div class="form-check">
-                        <input ${disabled} type="checkbox" class="form-check-input" id="${fieldId}">
+                        <input ${disabled} type="checkbox" class="form-check-input" id="${fieldId}" ${checked}>
                         <label class="form-check-label" for="${fieldId}">${label}</label>
                     </div>
                 </div>`
