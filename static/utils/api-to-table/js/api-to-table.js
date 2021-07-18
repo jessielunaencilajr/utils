@@ -208,7 +208,7 @@ class ApiToTable {
                 )
             }
             else if (details.type == 'checkbox') {
-                let checked = (rowData[field] == 'true') ? 'checked' : ''
+                let checked = (rowData[field]) ? 'checked' : ''
                 modalFields.append(`
                 <div class="col-md-6">
                     <div class="form-check">
