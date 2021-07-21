@@ -104,15 +104,32 @@
 }
 
 
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+
 .btn.refresh {
 	width: 40px !important;
 	background-color: #1d4189;
 	opacity: 0.8;
 }
 
-.btn.refresh:hover {opacity: 1}
+.btn.refresh:hover {
+	opacity: 1;
+}
 
 .btn.refresh:after {
-	content: '\f2f9';
+    content: '\f2f9';
 	font-family: FontAwesome;
+}
+
+.btn.refresh:disabled:after {
+	animation: spin 1s ease-in-out;
+	display: inline-block; /* necessary to animate element */
 }

@@ -4,6 +4,7 @@
 // add tests
 
 toastr.options.newestOnTop = false;
+let root = document.documentElement;
 
 class ApiToTable { 
     constructor({
@@ -304,8 +305,8 @@ class ApiToTable {
         let deleteWarning = (modalType == 'delete') ? `<div class="row"><div class="col-md-12"><h5 class="text-danger" id='modal-body-title'><i class="fas fa-exclamation-triangle"></i>  All related data created under this ${that.prefix.title()} will also be deleted.</h5></div></div><hr>` : ''
 
         let modal = $(
-            `<div class="modal fade" id="${modalId}" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-lg" role="document">
+            `<div class="modal" id="${modalId}" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg zoomIn" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="${modalId}-title">${modalType.title()} ${that.prefix.title()} ${modalTitleIndex}</h5>
@@ -495,6 +496,12 @@ class ApiToTable {
         return modal
     }
 
+    _setModalAnimationStartPos(originElem) {
+        let rect = originElem.getBoundingClientRect()
+        root.style.setProperty('--zoom-in-start-pos-top', rect.top + "px")
+        root.style.setProperty('--zoom-in-start-pos-left', rect.left + "px")
+    }
+
 
     _getColumns() {
         let that = this
@@ -535,6 +542,8 @@ class ApiToTable {
             colBtnWidth += 45
 
             $(`#${that.tableBodyId}`).on('click', 'button.edit', function () {
+                that._setModalAnimationStartPos(this)
+                
                 setTimeout(function() { // Delay to make sure that row has been selected first
                     let rowData = that.dataTable.row( { selected: true } ).data()
                     let modal = that._createModal('edit', rowData)
@@ -548,6 +557,8 @@ class ApiToTable {
             colBtnWidth += 45
 
             $(`#${that.tableBodyId}`).on('click', 'button.delete', function () {
+                that._setModalAnimationStartPos(this)
+
                 setTimeout(function() { // Delay to make sure that row has been selected first
                     let rowData = that.dataTable.row( { selected: true } ).data()
                     let modal = that._createModal('delete', rowData)
@@ -576,6 +587,8 @@ class ApiToTable {
             $(`#${that.cardButtonGroupId}`).append(btn)
 
             $(`#${that.prefix}-add-btn`).on('click', function () {
+                that._setModalAnimationStartPos(this)
+                
                 let modal = that._createModal('add')
                 modal.modal('show')
             })
@@ -600,7 +613,21 @@ class ApiToTable {
                     title: 'Refresh',
                 },
                 action: function( e, dt, node, config) {
+                    
+                    console.log(e)
+                    console.log(dt)
+                    console.log(node)
+                    console.log(config)
+
+                    node.prop('disabled', true)
+                    
                     that.reload()
+
+                    setTimeout(function() { // Delay to make sure that row has been selected first
+                        node.prop('disabled', false)
+                    }, 1000)
+
+                    // node.prop('disabled', false)
                 },
             }
             buttons.push(btn)

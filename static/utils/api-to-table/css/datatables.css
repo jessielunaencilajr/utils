@@ -41,12 +41,44 @@ table.dataTable tbody tr.selected td button:hover {
 }
 
 .modal-footer button:disabled:before {
-	animation: spin 2s linear infinite;
+	animation: spin 2s ease-in-out infinite;
 	display: inline-block; /* necessary to animate element */
     content: '\f110';
 	font-family: FontAwesome;
 	margin-right: 10px;
 }
+
+
+:root {
+	--zoom-in-start-pos-top: 0;
+	--zoom-in-start-pos-left: 0;
+}
+
+@keyframes zoomIn {
+	0% {
+		
+		transform: scale(0.1);
+		transform-origin: top left;
+		top: var(--zoom-in-start-pos-top);
+		left: var(--zoom-in-start-pos-left);
+	}
+	100% { /* Should be the same as modal-dialog*/
+		transform: scale(1);
+		transform-origin: top left;
+		top: 0;
+		left: 0;
+	}
+}
+
+.modal-dialog {
+	animation: zoomIn 0.45s ease-in-out;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
 
 
 /* 
