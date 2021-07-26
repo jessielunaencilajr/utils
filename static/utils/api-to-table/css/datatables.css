@@ -8,7 +8,7 @@ table.dataTable tbody tr:hover {
 	cursor: pointer;
 }
 
-table.dataTable tbody tr:hover td button {
+/* table.dataTable tbody tr:hover td button {
 	opacity: 0.1 !important;
 }
 
@@ -18,8 +18,32 @@ table.dataTable tbody tr.selected td button {
 
 table.dataTable tbody tr.selected td button:hover {
 	opacity: 1 !important;
+} */
+
+@media (hover: hover) and (pointer: fine) {
+	table.dataTable tbody tr:hover td button {
+		opacity: 0.1 !important;
+	}
+	
+	table.dataTable tbody tr.selected td button {
+		opacity: 0.8 !important;
+	}
+	
+	table.dataTable tbody tr.selected td button:hover {
+		opacity: 1 !important;
+	}
 }
 
+@media (hover: none) {
+	table.dataTable tbody tr.selected td button {
+		opacity: 0.8 !important;
+	}
+
+	table.dataTable tbody tr.selected + tr.child td button {
+		opacity: 0.8 !important;
+	}
+
+}
 
 .page-item.active .page-link {
     background-color: #435C75 !important;
