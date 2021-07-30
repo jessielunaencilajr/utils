@@ -169,12 +169,20 @@ class ApiToTable {
                 $(`#${fieldId}`).empty()
                 for (const [optVal, optHtml] of details.options.entries()) {
                     let opt = $('<option></option>').val(optVal).html(optHtml)
-                    if (optVal == 'null') { opt.prop('selected', true).prop("disabled", true) }
+                    if (optVal == null || optVal == 'null') { opt.prop('selected', true).prop("disabled", true) }
                     $(`#${fieldId}`).append(opt)
                     
-                    if (rowData[field] == optHtml) {
-                        $(`#${fieldId} option[value="${optVal}"]`).prop('selected', true)    
+                    if (details.compareFieldTo == 'val') {
+                        if (rowData[field] == optVal) {
+                            $(`#${fieldId} option[value="${optVal}"]`).prop('selected', true)    
+                        }
                     }
+                    else {
+                        if (rowData[field] == optHtml) {
+                            $(`#${fieldId} option[value="${optVal}"]`).prop('selected', true)    
+                        }
+                    }
+                    
                 }
                 
                 if (modalType != 'add') { continue }
