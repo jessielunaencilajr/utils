@@ -713,11 +713,19 @@ class ApiToTable {
 
     reload() {
         this.dataTable.ajax.reload((json) => this._updateSummaryCounters(json), false)
+        $('.subscriber-table-modified-event').trigger(this.tableId)
     }
 
     subscribe(eventDetails) {
         this.table.addClass(eventDetails['subscriberClass'])
         this.table.on(eventDetails['eventName'], () => this.reload())
+    }
+
+    getModifiedEventDetails() {
+        return {
+            subscriberClass: 'subscriber-table-modified-event',
+            eventName: this.tableId
+        }
     }
 
 }
