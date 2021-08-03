@@ -184,6 +184,13 @@ class ApiToTable {
                     }
                     
                 }
+
+                if (details.sort) {
+                    $(`#${fieldId}`).html($(`#${fieldId} option`).sort(function (a, b) {
+                        // return a.text.toLowerCase() == b.text.toLowerCase() ? 0 : a.text.toLowerCase() < b.text.toLowerCase() ? -1 : 1
+                        return a.value.toLowerCase() == b.value.toLowerCase() ? 0 : a.value.toLowerCase() < b.value.toLowerCase() ? -1 : 1
+                    }))
+                }
                 
                 if (modalType != 'add') { continue }
                 if ('default' in details) {
