@@ -18,6 +18,7 @@ class ApiToTable {
         params='',
         summary={},
         addlFormData=null,
+        notification=null,
     }) {
         this.url = url
         this.prefix = prefix
@@ -32,6 +33,7 @@ class ApiToTable {
         this.params = params
         this.summary = summary
         this.addlFormData = addlFormData
+        this.notification = notification
 
         this.fields = fields
         this.indexCol = indexCol
@@ -312,7 +314,7 @@ class ApiToTable {
                 }
                 else {
                     $(`#${fieldId}`).on('change', function() {
-                        let modalFieldLabel = $("label[for='" + $(this).attr('id') + "']");
+                        let modalFieldLabel = $("label[for='" + $(this).attr('id') + "']")
                         $(this).addClass('modal-field-changed')
                         modalFieldLabel.addClass('modal-field-changed-label')
                         if (modalField.val() == modalField.prop("defaultValue")) {
@@ -356,7 +358,7 @@ class ApiToTable {
                 modalFieldVal = `${modalField.val().trim()} 00:00:00`
             }
 
-            if (modalFieldVal == modalField.prop("defaultValue" && modalType == 'edit')) { continue }
+            if (modalFieldVal == modalField.prop("defaultValue") && modalType == 'edit') { continue }
 
             formData.append(field, modalFieldVal)
         }
@@ -374,6 +376,81 @@ class ApiToTable {
         for (const field of Object.keys(that.fields)) {
             $(`#${modalFieldId}-${field}-error`).html('')
         }
+    }
+
+    _sendEmailUpdate(data) {
+        let that = this
+        let notification = that.notification
+        const csrftoken = Cookies.get('csrftoken')
+        const request = new Request(
+            notification.api,
+            {headers: {'X-CSRFToken': csrftoken}}
+        )
+
+        let formData = new FormData()
+        let subject = `${notification.app} | ${that.prefix.title()} Update Notification`
+        formData.append('subject', subject)
+        formData.append('sender_email', notification.sender_email)
+        formData.append('to_email', that.notification.subscribers.join(';'))
+        
+        let name = ''
+        notification.indexName.forEach(function(item) {
+            let elemId = `${that.tableId}-modal-edit-fields-${item}`
+            let val = $(`#${elemId}`).prop("defaultValue")
+            name = name + val + ' '
+        })
+
+        let updatedFields = ''
+        $(".modal-field-changed").each(function() {
+            let label = $("label[for='" + $(this).attr('id') + "']").text()
+            let val_before = $(this).prop("defaultValue")
+            let val_new = $(this).val()
+            if ($(this).is('select')) {
+                val_before = $(`#${$(this).attr('id')} option[value="${val_before}"]`).text()
+                val_new = $(`#${$(this).attr('id')} option[value="${val_new}"]`).text()
+            }
+            updatedFields = `${updatedFields}
+                <tr>
+                    <td>${label}</td>
+                    <td>${val_before}</td>
+                    <td>${val_new}</td>        
+                </tr>`
+        })
+
+        let body = `
+            ${that.prefix.title()} ${data[that.indexColDisplay]} (${name.trim()}) has been updated by ${$('#user-login-id').val().toLowerCase()}!<br><br>
+            <style>
+                table, th, td {
+                    padding: 3px;
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                }
+            </style>
+            <table>
+                <tr>
+                    <th>Field</th>
+                    <th>Before</th>
+                    <th>After</th>
+                </tr>
+            ${updatedFields}
+            </table>
+        `
+        formData.append('body', body)
+        
+        console.log('Sending email')
+        fetch(request, {
+            method: 'POST',
+            mode: 'same-origin',
+            body: formData
+        }).then(function(response) {
+            if (response.status == 201) {
+                console.log('Email sent!')
+            }
+            else {
+                console.log('Email sending failed!')
+            }
+
+        })
     }
 
     _createModal(modalType, rowData={}) {
@@ -467,8 +544,12 @@ class ApiToTable {
 
                     if (response.status == 200) {
                         that.reload()
-                        modal.modal("hide")
                         toastr.success(`${that.prefix.title()} ${modalTitleIndex}`, `Changes have been saved`)
+                        let user = $('#user-login-id').val().toLowerCase()
+                        if (that.notification && !(that.notification.ignore.users.includes(user))) {
+                            that._sendEmailUpdate(rowData)
+                        }
+                        modal.modal("hide")
                     }
                     else {
                         toastr.error(`Failed to save changes to ${that.prefix.title()} ${modalTitleIndex}`, `Error!`)
