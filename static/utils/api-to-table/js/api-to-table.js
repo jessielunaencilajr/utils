@@ -169,7 +169,9 @@ class ApiToTable {
                 $(`#${fieldId}`).empty()
                 for (const [optVal, optHtml] of details.options.entries()) {
                     let opt = $('<option></option>').val(optVal).html(optHtml)
-                    if (optVal == null || optVal == 'null') { opt.prop('selected', true).prop("disabled", true) }
+                    if (optVal == null || optVal == 'null') {
+                        opt.prop('selected', true).prop("disabled", true)
+                    }
                     $(`#${fieldId}`).append(opt)
                     
                     if (details.compareFieldTo == 'val') {
@@ -192,11 +194,12 @@ class ApiToTable {
                     }))
                 }
                 
-                if (modalType != 'add') { continue }
-                if ('default' in details) {
-                    $(`#${fieldId} option[value="${details.default}"]`).prop('selected', true)
+                if (modalType == 'add') {
+                    if ('default' in details) {
+                        $(`#${fieldId} option[value="${details.default}"]`).prop('selected', true)
+                    }     
                 }
-                
+
             }
             else if (details.type == 'text') {
                 let value = (rowData[field]) ? rowData[field] : ''
@@ -270,10 +273,68 @@ class ApiToTable {
                 </div>`
                 )
             }
+            
+            if (modalType == 'edit') {
+                let modalField = $(`#${fieldId}`)
+                if (typeof $(`#${fieldId}`).prop("defaultValue") === "undefined") {
+                    
+
+                    let defaultVal = modalField.val()
+                    
+                    if (modalField.is(':checkbox')) {
+                        defaultVal = (modalField.is(':checked')) ? true : false
+                    }
+                    if (details.type == 'datetime_as_date' && modalField.val().trim() != '') {
+                        defaultVal = `${modalField.val().trim()} 00:00:00`
+                    }
+                    $(`#${fieldId}`).prop("defaultValue", defaultVal)
+                }
+
+                if ($(`#${fieldId}`).attr('type') == 'text' || $(`#${fieldId}`).is('textarea')) {
+                    $(`#${fieldId}`).on('input', function() {
+                        let modalFieldLabel = $("label[for='" + $(this).attr('id') + "']");
+                        $(this).addClass('modal-field-changed')
+                        modalFieldLabel.addClass('modal-field-changed-label')
+                        if (modalField.val() == modalField.prop("defaultValue")) {
+                            $(this).removeClass('modal-field-changed')
+                            modalFieldLabel.removeClass('modal-field-changed-label')
+                        }
+                        
+                        let btnId = `${modalFieldId.slice(0, modalFieldId.length-7)}-btn`
+                        if ($(".modal-field-changed").length){
+                            $(`#${btnId}`).prop('disabled', false)
+                        } else {
+                            $(`#${btnId}`).prop('disabled', true)
+                        }
+        
+                    })
+
+                }
+                else {
+                    $(`#${fieldId}`).on('change', function() {
+                        let modalFieldLabel = $("label[for='" + $(this).attr('id') + "']");
+                        $(this).addClass('modal-field-changed')
+                        modalFieldLabel.addClass('modal-field-changed-label')
+                        if (modalField.val() == modalField.prop("defaultValue")) {
+                            $(this).removeClass('modal-field-changed')
+                            modalFieldLabel.removeClass('modal-field-changed-label')
+                        }
+                        
+                        let btnId = `${modalFieldId.slice(0, modalFieldId.length-7)}-btn`
+                        if ($(".modal-field-changed").length){
+                            $(`#${btnId}`).prop('disabled', false)
+                        } else {
+                            $(`#${btnId}`).prop('disabled', true)
+                        }
+        
+                    })
+                }
+                
+            }
         }
     }
 
-    _createFormData(modalFieldId) {
+    _createFormData(modalFieldId, modalType) {
         let that = this
         let formData = new FormData()
 
@@ -294,6 +355,8 @@ class ApiToTable {
             if (details.type == 'datetime_as_date' && modalField.val().trim() != '') {
                 modalFieldVal = `${modalField.val().trim()} 00:00:00`
             }
+
+            if (modalFieldVal == modalField.prop("defaultValue" && modalType == 'edit')) { continue }
 
             formData.append(field, modalFieldVal)
         }
@@ -337,6 +400,9 @@ class ApiToTable {
             </div>`
         )
         $('body').append(modal)
+        if (modalType == 'edit') {
+            $(`#${modalId}-btn`).prop('disabled', true)
+        }
         that._addFields(`${modalId}-fields`, modalType, rowData)
         
         modal.on('hidden.bs.modal', function() { $(this).remove() }) // Remove modal when closed
@@ -345,6 +411,7 @@ class ApiToTable {
         $(`#${modalId}-btn`).click(function() {
 
             $(`#${modalId}-btn`).prop('disabled', true)
+            $(`#${modalId}-btn`).addClass('loading')
 
             that._clearError(`${modalId}-fields`)
 
@@ -361,10 +428,11 @@ class ApiToTable {
                 fetch(request, {
                     method: 'POST',
                     mode: 'same-origin',
-                    body: that._createFormData(`${modalId}-fields`)
+                    body: that._createFormData(`${modalId}-fields`, modalType)
                 }).then(function(response) {
                     toastCreating.remove()
                     $(`#${modalId}-btn`).prop('disabled', false)
+                    $(`#${modalId}-btn`).removeClass('loading')
     
                     if (response.status == 201) {
                         that.reload()
@@ -391,10 +459,11 @@ class ApiToTable {
                 fetch(request, {
                     method: 'PATCH',
                     mode: 'same-origin',
-                    body: that._createFormData(`${modalId}-fields`)
+                    body: that._createFormData(`${modalId}-fields`, modalType)
                 }).then(function(response) {
                     toast.remove()
                     $(`#${modalId}-btn`).prop('disabled', false)
+                    $(`#${modalId}-btn`).removeClass('loading')
 
                     if (response.status == 200) {
                         that.reload()
@@ -440,6 +509,7 @@ class ApiToTable {
                     }).then(function(response) {
                         toast.remove()
                         $(`#${modalId}-btn`).prop('disabled', false)
+                        $(`#${modalId}-btn`).removeClass('loading')
 
                         if (response.status == 200) {
                             that.reload()
@@ -478,6 +548,7 @@ class ApiToTable {
                     }).then(function(response) {
                         toast.remove()
                         $(`#${modalId}-btn`).prop('disabled', false)
+                        $(`#${modalId}-btn`).removeClass('loading')
 
                         if (response.status == 200) {
                             that.reload()
@@ -628,21 +699,12 @@ class ApiToTable {
                     title: 'Refresh',
                 },
                 action: function( e, dt, node, config) {
-                    
-                    console.log(e)
-                    console.log(dt)
-                    console.log(node)
-                    console.log(config)
-
                     node.prop('disabled', true)
-                    
                     that.reload()
 
-                    setTimeout(function() { // Delay to make sure that row has been selected first
+                    setTimeout(function() { // To avoid multiple clicks
                         node.prop('disabled', false)
                     }, 1000)
-
-                    // node.prop('disabled', false)
                 },
             }
             buttons.push(btn)

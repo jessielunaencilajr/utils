@@ -64,7 +64,7 @@ table.dataTable tbody tr.selected td button:hover {
 	}
 }
 
-.modal-footer button:disabled:before {
+.modal-footer button.loading:before {
 	animation: spin 2s ease-in-out infinite;
 	display: inline-block; /* necessary to animate element */
     content: '\f110';
@@ -86,6 +86,11 @@ table.dataTable tbody tr.selected td button:hover {
 		top: var(--zoom-in-start-pos-top);
 		left: var(--zoom-in-start-pos-left);
 	}
+	50% {
+		
+		transform: scale(0.3);
+		transform-origin: top left;
+	}
 	100% { /* Should be the same as modal-dialog*/
 		transform: scale(1);
 		transform-origin: top left;
@@ -95,7 +100,7 @@ table.dataTable tbody tr.selected td button:hover {
 }
 
 .modal-dialog {
-	animation: zoomIn 0.45s ease-in-out;
+	animation: zoomIn 0.35s ease-in;
 	position: fixed;
 	top: 0;
 	bottom: 0;
@@ -103,6 +108,33 @@ table.dataTable tbody tr.selected td button:hover {
 	right: 0;
 }
 
+.modal{
+    display: flex !important;
+	flex-direction: column !important;
+}
+
+
+.modal-field-changed-label:after {
+    content: '(Edited)';
+	color: red;
+	margin-left: 5px;
+}
+
+
+/* .modal-content{
+    display: flex !important;
+	flex-direction: column !important;
+}
+.modal-header{
+	flex-shrink: 0 !important;
+}
+.modal-footer{
+	flex-shrink: 0 !important;
+}
+
+.modal-body{
+	overflow-y: auto !important;
+} */
 
 
 /* 
