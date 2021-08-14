@@ -418,22 +418,37 @@ class ApiToTable {
         })
 
         let body = `
-            ${that.prefix.title()} ${data[that.indexColDisplay]} (${name.trim()}) has been updated by ${$('#user-login-id').val().toLowerCase()}!<br><br>
             <style>
                 table, th, td {
                     padding: 3px;
                     border: 1px solid black;
                     border-collapse: collapse;
+		            text-align: center;
+                }
+                table {
+                    table-layout: fixed;
+                    width: 600px;
+                }
+                td {
+                    width: 1%;
+                }
+                a {
+                    text-decoration: none;
                 }
             </style>
+            ${notification.project} | <a href="${document.location.href}">${notification.app}</a><br><br>
+            Hi,<br><br>
+            This is to notify you that <b>${that.prefix.title()} ${data[that.indexColDisplay]} (${name.trim()})</b> has been updated by <b>${$('#user-login-id').val().toLowerCase()}</b>.<br><br>
             <table>
                 <tr>
                     <th>Field</th>
-                    <th>Before</th>
-                    <th>After</th>
+                    <th>Original Value</th>
+                    <th>Updated Value</th>
                 </tr>
             ${updatedFields}
-            </table>
+            </table><br><br>
+            Please do not reply to this automated e-mail.<br>
+            To disable further notification, please contact ${notification.team}.<br><br>
         `
         formData.append('body', body)
         
