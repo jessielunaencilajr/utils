@@ -701,10 +701,12 @@ class ApiToTable {
         for (const [field, details] of Object.entries(that.fields)) {
             let isVisible = ('visible' in details) ? details.visible : true
             let label = ('label' in details) ? details.label : field.title()
+            let isSearchable = ('searchable' in details) ? details.searchable : true
             let col = {
                 title:label,
                 data:field,
                 visible:isVisible,
+                searchable:isSearchable,
             }
 
             if (field == 'timestamp') {
