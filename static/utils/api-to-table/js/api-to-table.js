@@ -482,7 +482,7 @@ class ApiToTable {
                             <h5 class="modal-title" id="${modalId}-title">${modalType.title()} ${that.prefix.title()} ${modalTitleIndex}</h5>
                             <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close" title="Close and discard changes"><span aria-hidden="true">&times;</span></button>
                         </div>
-                        <div class="modal-body" id="${modalId}-body">
+                        <div class="modal-body" id="${modalId}-body" style="max-height:75vh;overflow-y:auto;">
                             ${deleteWarning}
                             <div class="row" id="${modalId}-fields"></div>
                         </div>
