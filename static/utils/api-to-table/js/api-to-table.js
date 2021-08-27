@@ -474,19 +474,31 @@ class ApiToTable {
         let modalTitleIndex = (rowData[that.indexColDisplay]) ? rowData[that.indexColDisplay] : ''
         let deleteWarning = (modalType == 'delete') ? `<div class="row"><div class="col-md-12"><h5 class="text-danger" id='modal-body-title'><i class="fas fa-exclamation-triangle"></i>  All related data created under this ${that.prefix.title()} will also be deleted.</h5></div></div><hr>` : ''
 
+        let modalCloseButtonColor = 'btn-danger'
+        let modalFooterButtonColor = 'btn-success'
+        let modalFooterButtonText = modalType.title()
+
+        if (modalType == 'delete') {
+            modalCloseButtonColor = 'btn-secondary'
+            modalFooterButtonColor = 'btn-danger'
+        }
+        else if (modalType == 'edit') {
+            modalFooterButtonText = 'Update'
+        }
+
         let modal = $(
             `<div class="modal" id="${modalId}" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-lg zoomIn" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="${modalId}-title">${modalType.title()} ${that.prefix.title()} ${modalTitleIndex}</h5>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close" title="Close and discard changes"><span aria-hidden="true">&times;</span></button>
+                            <button type="button" class="btn ${modalCloseButtonColor}" data-dismiss="modal" aria-label="Close" title="Close and discard changes"><span aria-hidden="true">&times;</span></button>
                         </div>
                         <div class="modal-body" id="${modalId}-body" style="max-height:75vh;overflow-y:auto;">
                             ${deleteWarning}
                             <div class="row" id="${modalId}-fields"></div>
                         </div>
-                        <div class="modal-footer"><button class="btn btn-secondary float-right" type="button" id="${modalId}-btn">${modalType.title()}</button></div>
+                        <div class="modal-footer"><button class="btn ${modalFooterButtonColor} float-right" type="button" id="${modalId}-btn">${modalFooterButtonText}</button></div>
                     </div>
                 </div>
             </div>`
