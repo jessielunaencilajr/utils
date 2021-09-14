@@ -714,6 +714,8 @@ class ApiToTable {
             let isVisible = ('visible' in details) ? details.visible : true
             let label = ('label' in details) ? details.label : field.title()
             let isSearchable = ('searchable' in details) ? details.searchable : true
+            let truncateLength = ('truncate' in details) ? parseInt(details.truncate) : 0
+
             let col = {
                 title:label,
                 data:field,
@@ -726,6 +728,11 @@ class ApiToTable {
                     return moment.utc(data).local().format('YYYY-MM-DD HH:mm:ss')
                 }
             }
+
+            if (truncateLength > 0) {
+                col.render = $.fn.dataTable.render.ellipsis( truncateLength , true )
+            }
+
             cols.push(col)
             
         }
