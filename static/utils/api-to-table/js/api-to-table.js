@@ -333,6 +333,19 @@ class ApiToTable {
                 }
                 
             }
+
+            if ('tooltip' in details) {
+                let tooltipContent = details.tooltip
+                if (typeof details.tooltip === 'function') {
+                    tooltipContent = details.tooltip(rowData)
+                }
+                
+                tippy(`#${fieldId}`, {
+                    content: tooltipContent,
+                    allowHTML: true,
+                    theme: 'light',
+                })
+            }
         }
     }
 
